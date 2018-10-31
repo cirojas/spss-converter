@@ -27,7 +27,7 @@ namespace spss_reader
             InitializeComponent();
         }
 
-        public void ReadSpss(string filename)
+        public void ReadSpss(string filename, char separator)
         {
             // Open file, can be read only and sequetial (for performance), or anything else
             using (FileStream fileStream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 2048 * 10,
@@ -36,50 +36,92 @@ namespace spss_reader
                 // Create the reader, this will read the file header
                 SpssReader spssDataset = new SpssReader(fileStream);
 
-                
 
-                
-
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\Users\Carlos\Desktop\output.txt"))
+                SaveFileDialog dlg = new SaveFileDialog
                 {
-                    // Iterate through all the varaibles
-                    foreach (var variable in spssDataset.Variables)
-                    {
-                        // Display name and label
-                        file.WriteLine("{0} - {1}", variable.Name, variable.Label);
-                        // Display value-labels collection
-                        foreach (KeyValuePair<double, string> label in variable.ValueLabels)
-                        {
-                            file.WriteLine(" {0} - {1}", label.Key, label.Value);
-                        }
-                    }
+                    DefaultExt = ".csv",
+                    Filter = "csv documents (.csv)|*.csv"
+                };
 
-                    // Iterate through all data rows in the file
-                    foreach (var record in spssDataset.Records)
+                dlg.ShowDialog();
+
+                if (dlg.FileName != "")
+                {
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(dlg.FileName))
                     {
                         bool first = true;
                         foreach (var variable in spssDataset.Variables)
                         {
                             if (first)
                             {
-                                file.Write(record.GetValue(variable));
+                                file.Write("{0}", variable.Name);
                                 first = false;
                             }
                             else
                             {
-                                file.Write(string.Format(",{0}", record.GetValue(variable)));
+                                file.Write("{0}{1}", separator, variable.Name);
                             }
-                            //file.Write(variable.Name);
-                            //file.Write(':');
-                            // Use the corresponding variable object to get the values.
-                            //file.Write(record.GetValue(variable));
-                            // This will get the missing values as null, text with out extra spaces,
-                            // and date values as DateTime.
-                            // For original values, use record[variable] or record[int]
                         }
                         file.WriteLine(string.Empty);
+
+                        // Iterate through all data rows in the file
+                        foreach (var record in spssDataset.Records)
+                        {
+                            first = true;
+                            foreach (var variable in spssDataset.Variables)
+                            {
+                                if (first)
+                                {
+                                    file.Write(record.GetValue(variable));
+                                    first = false;
+                                }
+                                else
+                                {
+                                    file.Write(string.Format("{0}{1}", separator, record.GetValue(variable)));
+                                }
+                            }
+                            file.WriteLine(string.Empty);
+                        }
                     }
                 }
+                else
+                {
+                    return;
+                }
+
+                if (GenearaMetadatos.IsChecked == true)
+                {
+                    SaveFileDialog dlg2 = new SaveFileDialog
+                    {
+                        DefaultExt = ".txt",
+                        Filter = "text documents (.txt)|*.txt",
+                        FileName = dlg.FileName.Replace(".csv", "_metadata.txt")
+                    };
+
+                    dlg2.ShowDialog();
+
+                    if (dlg2.FileName != "")
+                    {
+                        using (System.IO.StreamWriter file = new System.IO.StreamWriter(dlg2.FileName))
+                        {
+                            // Iterate through all the varaibles
+                            foreach (var variable in spssDataset.Variables)
+                            {
+                                // Display name and label
+                                file.WriteLine("{0} - {1}", variable.Name, variable.Label);
+                                // Display value-labels collection
+                                foreach (KeyValuePair<double, string> label in variable.ValueLabels)
+                                {
+                                    file.WriteLine("{0} - {1}", label.Key, label.Value);
+                                }
+                                file.WriteLine(string.Empty);
+                                file.WriteLine(string.Empty);
+                            }
+                        }
+                    }
+                }
+
+                MessageBox.Show("Finalizado exitosamente", "Finalizado exitosamente", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -88,13 +130,27 @@ namespace spss_reader
             OpenFileDialog dlg = new OpenFileDialog();
             Nullable<bool> result = dlg.ShowDialog();
 
-
             // Get the selected file name and display in a TextBox 
             if (result == true)
             {
-                // Open document 
                 string filename = dlg.FileName;
-                ReadSpss(filename);
+                ReadSpss(filename, GetSeparator());
+            }
+        }
+
+        private char GetSeparator()
+        {
+            if (SeparatorOptions.SelectedIndex == 0)
+            {
+                return ',';
+            }
+            else if (SeparatorOptions.SelectedIndex == 0)
+            {
+                return ';';
+            }
+            else
+            {
+                return '|';
             }
         }
     }

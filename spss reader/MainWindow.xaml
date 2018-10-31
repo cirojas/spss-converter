@@ -5,9 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:spss_reader"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Convertidor .sav a .csv" Height="200" Width="300">
     <Grid>
-        <Button Content="Abrir .sav" HorizontalAlignment="Left" Margin="657,357,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Label Content="Caracter de separación:" HorizontalAlignment="Left" Margin="50,10,0,0" VerticalAlignment="Top"/>
+        <ComboBox Name="SeparatorOptions" HorizontalAlignment="Left" Margin="50,40,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="0">
+            <ComboBoxItem Content="coma ( , )"></ComboBoxItem>
+            <ComboBoxItem Content="punto y coma ( ; )"></ComboBoxItem>
+            <ComboBoxItem Content="tabulación"></ComboBoxItem>
+            <ComboBoxItem Content="barra ( | )"></ComboBoxItem>
+        </ComboBox>
+        <CheckBox Name="GenearaMetadatos" Content="Generar archivo de metadatos" HorizontalAlignment="Left" Margin="50,79,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <Button Content="Abrir .sav" VerticalAlignment="Top" Click="Button_Click" Width="100" Margin="100,112,0,0" HorizontalAlignment="Left"/>
 
     </Grid>
 </Window>
