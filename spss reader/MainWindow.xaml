@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:spss_reader"
         mc:Ignorable="d"
-        Title="Convertidor .sav a .csv" Height="200" Width="300">
+        Title="Convertidor .sav a .csv" Height="220" Width="300">
     <Grid>
         <Label Content="Caracter de separación:" HorizontalAlignment="Left" Margin="50,10,0,0" VerticalAlignment="Top"/>
         <ComboBox Name="SeparatorOptions" HorizontalAlignment="Left" Margin="50,40,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="0">
@@ -15,7 +15,8 @@
             <ComboBoxItem Content="barra ( | )"></ComboBoxItem>
         </ComboBox>
         <CheckBox Name="GenearaMetadatos" Content="Generar archivo de metadatos" HorizontalAlignment="Left" Margin="50,79,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <Button Content="Abrir .sav" VerticalAlignment="Top" Click="Button_Click" Width="100" Margin="100,112,0,0" HorizontalAlignment="Left"/>
+        <Button Content="Abrir .sav" VerticalAlignment="Top" Click="ButtonAbrirSav_Click" Width="100" Margin="100,112,0,0" HorizontalAlignment="Left"/>
+        <Button Content="Abrir múltiples .sav" VerticalAlignment="Top" Click="ButtonAbrirMultiplesSav_Click" Width="120" Margin="88,145,0,0" HorizontalAlignment="Left"/>
 
     </Grid>
 </Window>

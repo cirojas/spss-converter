@@ -39,6 +39,7 @@ namespace spss_reader
 
                 SaveFileDialog dlg = new SaveFileDialog
                 {
+                    FileName = filename.Replace(".sav", string.Empty),
                     DefaultExt = ".csv",
                     Filter = "csv documents (.csv)|*.csv"
                 };
@@ -125,16 +126,36 @@ namespace spss_reader
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ButtonAbrirSav_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
-            Nullable<bool> result = dlg.ShowDialog();
+            bool? result = dlg.ShowDialog();
 
             // Get the selected file name and display in a TextBox 
             if (result == true)
             {
                 string filename = dlg.FileName;
                 ReadSpss(filename, GetSeparator());
+            }
+        }
+
+        private void ButtonAbrirMultiplesSav_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog
+            {
+                Multiselect = true,
+                Filter = "Spss Files (SAV)|*.SAV"
+            };
+            bool? result = dlg.ShowDialog();
+
+            // Get the selected file name and display in a TextBox 
+            if (result == true)
+            {
+                string[] filenames = dlg.FileNames;
+                foreach(string filename in filenames)
+                {
+                    ReadSpss(filename, GetSeparator());
+                }
             }
         }
 
